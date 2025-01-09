@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Fichaje</title>
+</head>
+<body>
+    <h1>Registrar Fichaje</h1>
+
+    <!-- Formulario registrar el fichaje -->
+    <form id="ficharForm">
+        <label for="empleadoID">ID del Empleado:</label>
+        <input type="text" id="empleadoID" name="empleadoID" required>
+        <button type="submit">Fichar</button>
+    </form>
+
+    <!-- Div para mostrar respuesta del servidor -->
+    <div id="response"></div>
+
+    <script>
+        // Script para manejar formulario
+        document.getElementById('ficharForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Obtener el empleadoID del formulario
+            const empleadoID = document.getElementById('empleadoID').value;
+
+            // Enviar petición POST al servidor
+            fetch('../asistencia/fichar.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `empleadoID=${empleadoID}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Mostrar respuesta del servidor
+                document.getElementById('response').innerText = data.message || data.error;
+            });
+        });
+    </script>
+</body>
+</html>

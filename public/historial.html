@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Historial</title>
+</head>
+<body>
+    <h1>Consultar Historial</h1>
+
+    <!-- Formulario para consultar el historial de asistencia -->
+    <form id="historialForm">
+        <label for="empleadoID">ID del Empleado:</label>
+        <input type="text" id="empleadoID" name="empleadoID" required>
+        <label for="fechaInicio">Fecha Inicio:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio">
+        <label for="fechaFin">Fecha Fin:</label>
+        <input type="date" id="fechaFin" name="fechaFin">
+        <button type="submit">Consultar</button>
+    </form>
+
+    <!-- Div para mostrar la respuesta del servidor -->
+    <div id="response"></div>
+
+    <script>
+        // Script para manejar formulario
+        document.getElementById('historialForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Obtener los datos del formulario
+            const empleadoID = document.getElementById('empleadoID').value;
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+
+            // Crear petición GET al servidor
+            let url = `../asistencia/historial.php?empleadoID=${empleadoID}`;
+            if (fechaInicio && fechaFin) {
+                url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            }
+
+            // Enviar la petición GET al servidor
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Crear la lista de registros de asistencia
+                let output = '<ul>';
+                data.forEach(registro => {
+                    output += `<li>${registro.fecha}: Entrada - ${registro.hora_entrada}, Salida - ${registro.hora_salida}, Total Horas - ${registro.total_horas}</li>`;
+                });
+                output += '</ul>';
+                // Mostrar la respuesta del servidor
+                document.getElementById('response').innerHTML = output;
+            });
+        });
+    </script>
+</body>
+</html>
